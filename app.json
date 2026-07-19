@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "Goal Board",
+    "slug": "goal-board",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "android": {
+      "package": "com.goalboard.app",
+      "permissions": ["android.permission.RECEIVE_SMS", "android.permission.READ_SMS"]
+    },
+    "plugins": ["@maniac-tech/react-native-expo-read-sms"]
+  }
+}
