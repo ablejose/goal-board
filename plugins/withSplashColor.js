@@ -5,7 +5,10 @@
 // resource linker (:app:processReleaseResources / AAPT) fails with:
 //   "resource color/splashscreen_background ... not found".
 // This plugin defines the color during prebuild so linking succeeds.
-const { withAndroidColors, AndroidConfig } = require('@expo/config-plugins');
+//
+// Import from "expo/config-plugins" (re-export) rather than "@expo/config-plugins"
+// so it resolves from a normal install without relying on package hoisting.
+const { withAndroidColors, AndroidConfig } = require('expo/config-plugins');
 
 // Keep in sync with the app's root background (App.js styles.root).
 const SPLASH_BACKGROUND = '#05070d';
