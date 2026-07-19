@@ -32,12 +32,12 @@ export default function App() {
   const frame = `${DX},0 ${W},0 ${W - DX},${H} 0,${H}`;
 
   useEffect(() => {
-    AsyncStorage.getItem(STORE_KEY).then((v) => { if (v \!= null) setBalance(parseFloat(v)); });
+    AsyncStorage.getItem(STORE_KEY).then((v) => { if (v != null) setBalance(parseFloat(v)); });
   }, []);
 
   const applyBody = (body) => {
     const t = parseSms(body);
-    if (\!t || t.account \!== ACCOUNT) return;
+    if (!t || t.account !== ACCOUNT) return;
     setBalance(t.balance); // single account: SMS balance is authoritative
     AsyncStorage.setItem(STORE_KEY, String(t.balance));
   };
