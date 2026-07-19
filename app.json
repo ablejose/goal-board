@@ -9,6 +9,15 @@
     "android": {
       "package": "com.goalboard.app"
     },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#05070d",
+          "resizeMode": "contain"
+        }
+      ]
+    ],
     "extra": {
       "eas": {
         "projectId": "d95d3290-11e2-49ba-8dc8-c5e45cc5c7c5"
