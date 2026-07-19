@@ -11,7 +11,7 @@ const STORE_KEY = 'gym_balance';
 const POLL_MS = 15000;
 
 // Paste your Apps Script Web App URL (ends with /exec) after deploying it:
-const ENDPOINT = 'PASTE_YOUR_APPS_SCRIPT_EXEC_URL';
+const ENDPOINT = 'https://script.google.com/macros/s/AKfycbwLtvZ9zQw6O3zyXvYD7xy3NxsMy-a0xsj5UNpFLzLckyuXpkv_88UFWNm2xtFuNjaJ/exec';
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
