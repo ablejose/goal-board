@@ -1,35 +1,42 @@
-# Goal Board (Expo + EAS cloud build)
+# Goal Board (Sheet-driven)
 
-Neon GYM scoreboard. Bar fills toward INR 4000, driven by PNB bank SMS.
-No Android Studio needed - the APK is built in the cloud by EAS, then sideloaded.
+A no-button neon scoreboard. Bank SMS flow into a Google Sheet; the app reads the
+current balance from a Google Apps Script endpoint and fills the bar toward your
+target. No native SMS code - pure JavaScript, so it builds cleanly and supports
+EAS Update (over-the-air JS updates).
 
-## Build the APK with EAS (no Android Studio)
-You only need Node + the lightweight eas-cli (works on any low-spec laptop),
-or the phone-only route below.
+## Flow
+```
+Bank SMS -> forwarder app -> Apps Script doPost -> Google Sheet
+Google Sheet -> Apps Script doGet -> the app (polls every 15s + on open)
+```
 
-Route A - from a computer (any OS, small install):
-1. npm install
-2. npm i -g eas-cli
-3. eas login            (free Expo account)
-4. eas build:configure
-5. eas build -p android --profile preview
-6. When it finishes, EAS gives a download link. Open it on your phone,
-   download the APK, and install (allow "install unknown apps").
-7. Launch, grant the SMS permission. It tracks PNB SMS on account X7046.
+## 1. Sheet + Apps Script
+1. Open the Sheet: https://docs.google.com/spreadsheets/d/1PjGysTO1hxrJT0Yh9xDxmEYGBUXbAqxHNy27pAxxs2I/edit
+2. Extensions > Apps Script. Delete any starter code and paste `apps-script/Code.gs` from this repo.
+3. Set `SECRET` to your own private random string (keep it out of the app/repo).
+4. Deploy > New deployment > type **Web app** > Execute as: **Me** > Who has access: **Anyone** > Deploy.
+5. Copy the Web app URL (ends with `/exec`).
+6. Put that URL in `App.js` -> `ENDPOINT` (or send it to me and I will commit it).
 
-Route B - phone only (no computer):
-1. Push this folder to a GitHub repo (GitHub mobile / web works).
-2. Go to expo.dev, create a project, connect the repo.
-3. Trigger a build (profile: preview) from the EAS dashboard in your browser.
-4. Download the APK to your phone and install as above.
+## 2. Forwarder (catches SMS in the background)
+Use MacroDroid (free) or Tasker:
+- Trigger: **SMS Received** (optionally filter: sender contains "PNB").
+- Action: **HTTP Request / POST** to your `/exec` URL.
+  - Content type: `application/x-www-form-urlencoded`
+  - Body: `token=YOUR_SECRET&body={sms_message_text_variable}`
 
-## Config / rewire
-Top of App.js: ACCOUNT, GOAL_NAME, TARGET, SEED.
-USE_MOCK is already false (real SMS). Set true only if you ever test in Expo Go.
+Now every bank SMS is logged to the Sheet automatically, even while the app is closed.
 
-## SMS reliability notes (important)
-- Use the "preview"/"production" standalone APK (this setup), NOT a dev client, for
-  a background SMS receiver that survives app close.
-- On Xiaomi/MIUI, Oppo, Vivo, Realme: enable "Autostart" for the app and disable
-  battery optimization, or the OS kills the SMS receiver in the background.
-- READ_SMS/RECEIVE_SMS apps are restricted on the Play Store - keep it sideloaded.
+## 3. Build / deploy
+- Push to `main` -> EAS build trigger (or "Build from GitHub", profile `preview`) -> install the APK.
+- Later JS tweaks can ship via **EAS Update** with no rebuild.
+
+## Rewire
+- `App.js`: GOAL_NAME, TARGET, SEED, ENDPOINT, POLL_MS.
+- `apps-script/Code.gs`: ACCOUNT, SECRET, SHEET_NAME.
+
+## Privacy note
+The `/exec` GET returns only the current balance number. Writing to the Sheet requires
+the SECRET, so no one can inject fake data without it. If you would rather the balance
+URL not sit in a public repo, make the repo private.

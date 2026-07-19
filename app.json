@@ -6,10 +6,8 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
-    "plugins": ["./plugins/withSplashColor.js"],
     "android": {
-      "package": "com.goalboard.app",
-      "permissions": ["android.permission.RECEIVE_SMS", "android.permission.READ_SMS"]
+      "package": "com.goalboard.app"
     },
     "extra": {
       "eas": {
