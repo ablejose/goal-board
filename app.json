@@ -8,7 +8,6 @@
     "android": {
       "package": "com.goalboard.app",
       "permissions": ["android.permission.RECEIVE_SMS", "android.permission.READ_SMS"]
-    },
-    "plugins": ["@maniac-tech/react-native-expo-read-sms"]
+    }
   }
 }
